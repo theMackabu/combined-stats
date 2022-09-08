@@ -1,13 +1,15 @@
 import 'dotenv/config';
+import path from 'path';
 import 'reflect-metadata';
+import render from 'koa-ejs';
 import { Client } from 'discordx';
 import { QuickDB } from 'quick.db';
 import { Koa } from '@discordx/koa';
-import { IntentsBitField, ActivityType } from 'discord.js';
+import bodyParser from 'koa-bodyparser';
 import { dirname, importx } from '@discordx/importer';
 import type { Interaction, Message } from 'discord.js';
-import render from 'koa-ejs';
-import path from 'path';
+import { IntentsBitField, ActivityType } from 'discord.js';
+import logger from 'koa-bunyan-logger';
 
 export const client = new Client({
 	botGuilds: [(bot) => bot.guilds.cache.map((guild) => guild.id)],
@@ -53,19 +55,22 @@ async function run() {
 
 	await client.login(process.env.BOT_TOKEN);
 	const server = new Koa();
+
+	server.use(bodyParser()).use(logger()).use(logger.requestIdContext()).use(logger.requestLogger());
+
 	await server.build();
+
+	render(server, {
+		root: 'src/views',
+		layout: false,
+		viewExt: 'html',
+		cache: false,
+	});
 
 	const port = process.env.PORT ?? 3000;
 	server.listen(port, () => {
 		console.log(`Started web interface at [::]:${port}`);
 		console.log(`Quick reference: 'http://127.0.0.1:${port}/api'`);
-
-		render(server, {
-			root: 'src/views',
-			layout: false,
-			viewExt: 'html',
-			cache: false,
-		});
 	});
 }
 
