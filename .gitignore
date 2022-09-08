@@ -2,3 +2,4 @@
 yarn.lock
 build
 node_modules
+data.sqlite
