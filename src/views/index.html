@@ -1,0 +1,8 @@
+<% for (item of routes) { %>
+<p>
+	<b>(<%= item.type %>)</b> <%= item.name %> <b>[<%= item.url %><%= item.param && '/:' + item.param %>] </b>
+	<span><%= item.body ? 'body: ' + item.body : '' %></span>
+	<a href="<%= item.url %>">goto</a><br />
+	<span><%= item.info ? ' - ' + item.info : '' %></span>
+</p>
+<% } %>
