@@ -4,8 +4,8 @@
 // License text available at https://www.gnu.org/licenses/gpl-3.0.en.html
 
 import { QuickDB } from 'quick.db';
-import { client } from '../main.js';
 import type { Context } from 'koa';
+import { client } from '../main.js';
 import { Get, Router } from '@discordx/koa';
 
 const db = new QuickDB({ filePath: 'data.sqlite' });

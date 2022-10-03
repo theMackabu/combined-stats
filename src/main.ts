@@ -10,11 +10,11 @@ import render from 'koa-ejs';
 import { Client } from 'discordx';
 import { QuickDB } from 'quick.db';
 import { Koa } from '@discordx/koa';
+import logger from 'koa-bunyan-logger';
 import bodyParser from 'koa-bodyparser';
 import { dirname, importx } from '@discordx/importer';
 import type { Interaction, Message } from 'discord.js';
 import { IntentsBitField, ActivityType } from 'discord.js';
-import logger from 'koa-bunyan-logger';
 
 export const client = new Client({
 	botGuilds: [(bot) => bot.guilds.cache.map((guild) => guild.id)],
