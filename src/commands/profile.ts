@@ -32,7 +32,7 @@ export class Profile {
 								? `***${discord_id}'s linked accounts***\n\n` + accountList.join(' ')
 								: '***Your linked accounts***\n\n' + accountList.join(' '),
 							footer: {
-								text: `${accounts.length} account${accounts.length === 1 ? ' is' : 's are'} linked to this profile.`,
+								text: `${Object.keys(accounts).length} account${Object.keys(accounts).length === 1 ? ' is' : 's are'} linked to this profile.`,
 							},
 						},
 					],
@@ -92,13 +92,11 @@ export class Profile {
 			.then(async () => {
 				if (error == '') {
 					embed.setFooter({
-						text: `Added ${usernames.trim().replace(/,\s*$/, '').split(',').length} account${
-							usernames.trim().replace(/,\s*$/, '').split(',').length === 1 ? '' : 's'
-						}.`,
+						text: `Added ${userList.length} account${userList.length === 1 ? '' : 's'}.`,
 					});
 					embed.addFields({
 						name: 'Accounts successfully added to profile:',
-						value: usernames.trim().replace(/,\s*$/, '').split(',').join(', '),
+						value: userList.join(', '),
 					});
 
 					await command.reply({ embeds: [embed] });
@@ -116,16 +114,10 @@ export class Profile {
 	): Promise<void> {
 		const db = new QuickDB({ filePath: 'data.sqlite' });
 		const accounts: any = await db.get(`${command?.user.id}.accounts`);
+		const userList = usernames.trim().replace(/,\s*$/, '').split(',');
 
-		await db.set(`${command?.user.id}`, {
-			accounts: usernames
-				.trim()
-				.replace(/,\s*$/, '')
-				.split(',')
-				.map((username) => {
-					return accounts.filter((account: any) => account !== username);
-				})
-				.flat(),
+		userList.map(async (username: any) => {
+			await db.delete(`${command?.user.id}.accounts.${username}`);
 		});
 
 		const embed = new EmbedBuilder()
