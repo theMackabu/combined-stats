@@ -64,10 +64,7 @@ export class Profile {
 					Object.keys(combined).map((stat: string) => {
 						embed.addFields({
 							name: stat,
-							value: combined[stat]
-								.reduce((a: number, b: number) => a + b, 0)
-								.toFixed(2)
-								.toString(),
+							value: Number(combined[stat].reduce((a: number, b: number) => a + b, 0).toFixed(3)).toLocaleString('en-US'),
 							inline: true,
 						});
 					});
@@ -80,7 +77,7 @@ export class Profile {
 
 					embed.addFields({
 						name: 'ranks',
-						value: JSON.stringify(misc.ranks),
+						value: misc.ranks.join(', '),
 						inline: true,
 					});
 

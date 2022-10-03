@@ -57,13 +57,10 @@ export class Profile {
 						.setDescription(discord_id ? `***${discord_id}'s stats in Skywars***` : `***Your combined stats in Skywars***`)
 						.setFooter({ text: `${uuidList?.length} accounts combined` });
 
-					Object.keys(combined).map((game: string) => {
+					Object.keys(combined).map((stat: string) => {
 						embed.addFields({
-							name: game,
-							value: combined[game]
-								.reduce((a: number, b: number) => a + b, 0)
-								.toFixed(2)
-								.toString(),
+							name: stat,
+							value: Number(combined[stat].reduce((a: number, b: number) => a + b, 0).toFixed(3)).toLocaleString('en-US'),
 							inline: true,
 						});
 					});
