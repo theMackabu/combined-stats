@@ -9,7 +9,7 @@ export class Stats {
 	@Get('/api/stats/:game/:username')
 	async getStats(ctx: Context): Promise<void> {
 		const data: any = await got.get(`https://api.slothpixel.me/api/players/${ctx.params.username}?key=${process.env.API_KEY}`).json();
-		ctx.body = data?.player.stats[ctx.params.game];
+		ctx.body = data?.stats[ctx.params.game];
 	}
 
 	@Post('/api/stats/:game')
