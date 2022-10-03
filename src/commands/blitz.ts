@@ -24,25 +24,29 @@ export class Profile {
 				.json()
 				.then(async (res: any) => {
 					const combined: any = {
-						coins: [],
-						wins: [],
-						playTime: [],
-						kills: [],
-						deaths: [],
-						kdr: [],
-						wlr: [],
+						['Coins']: [],
+						['Wins']: [],
+						['Play Time']: [],
+						['Kills']: [],
+						['Deaths']: [],
+						['K/D Ratio']: [],
+						['W/L Ratio']: [],
 					};
 
 					res.map((user: any) => {
-						combined.coins.push(user.data.coins);
-						combined.wins.push(user.data.wins + user.data.team_wins);
-						combined.playTime.push(user.data.time_played);
-						combined.kills.push(user.data.kills);
-						combined.deaths.push(user.data.deaths);
+						combined['Coins'].push(user.data.coins);
+						combined['Wins'].push(user.data.wins + user.data.team_wins);
+						combined['Play Time'].push(user.data.time_played);
+						combined['Kills'].push(user.data.kills);
+						combined['Deaths'].push(user.data.deaths);
 					});
 
-					combined.kdr.push(combined.kills.reduce((a: number, b: number) => a + b, 0) / combined.deaths.reduce((a: number, b: number) => a + b, 0));
-					combined.wlr.push(combined.wins.reduce((a: number, b: number) => a + b, 0) / combined.deaths.reduce((a: number, b: number) => a + b, 0));
+					combined['K/D Ratio'].push(
+						combined['Kills'].reduce((a: number, b: number) => a + b, 0) / combined['Deaths'].reduce((a: number, b: number) => a + b, 0)
+					);
+					combined['W/L Ratio'].push(
+						combined['Wins'].reduce((a: number, b: number) => a + b, 0) / combined['Deaths'].reduce((a: number, b: number) => a + b, 0)
+					);
 
 					const embed = new EmbedBuilder()
 						.setDescription(discord_id ? `***${discord_id}'s stats in Blitz SG***` : `***Your combined stats in Blitz SG***`)
