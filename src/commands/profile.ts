@@ -16,14 +16,17 @@ export class Profile {
 		command: CommandInteraction
 	): Promise<void> {
 		const db = new QuickDB({ filePath: 'data.sqlite' });
-		const formatted_discord_id = discord_id ? discord_id.slice(3).slice(0, -1) : null;
+		const formatted_discord_id = discord_id ? discord_id.slice(2).slice(0, -1) : null;
 		const accounts: any = await db.get(`${formatted_discord_id ? formatted_discord_id : command?.user.id}.accounts`);
 		let accountList: any = [];
 		try {
 			Promise.all(
 				accounts.map(async (account: any) => {
-					const uuid: any = await got.get(`https://api.mojang.com/users/profiles/minecraft/${account}`).json();
-					accountList.push(`\`${account}\` - [${uuid.id}](https://25karma.xyz/player/${uuid.id})\n`);
+					const uuid: any = await got
+						.get(`https://api.mojang.com/users/profiles/minecraft/${account}`)
+						.json()
+						.catch((err) => console.log(err));
+					accountList.push(`\`${account}\` - [${uuid ? uuid.id : '__invalid player__'}](${uuid ? 'https://25karma.xyz/player/' + uuid.id : ''})\n`);
 				})
 			).then(async () => {
 				await command.reply({
@@ -40,6 +43,7 @@ export class Profile {
 				});
 			});
 		} catch (err) {
+			console.log(err);
 			await command.reply({
 				embeds: [
 					{
@@ -61,11 +65,15 @@ export class Profile {
 		command: CommandInteraction
 	): Promise<void> {
 		const db = new QuickDB({ filePath: 'data.sqlite' });
-		await db.push(`${command?.user.id}.accounts`, usernames.split(','));
+		await db.push(`${command?.user.id}.accounts`, usernames.trim().replace(/,\s*$/, '').split(','));
 
 		const embed = new EmbedBuilder()
-			.setFooter({ text: `Added ${usernames.split(',').length} account${usernames.split(',').length === 1 ? '' : 's'}.` })
-			.addFields({ name: 'Accounts successfully added to profile:', value: usernames.split(',').join(', ') });
+			.setFooter({
+				text: `Added ${usernames.trim().replace(/,\s*$/, '').split(',').length} account${
+					usernames.trim().replace(/,\s*$/, '').split(',').length === 1 ? '' : 's'
+				}.`,
+			})
+			.addFields({ name: 'Accounts successfully added to profile:', value: usernames.trim().replace(/,\s*$/, '').split(',').join(', ') });
 
 		await command.reply({ embeds: [embed] });
 	}
@@ -81,20 +89,24 @@ export class Profile {
 		const db = new QuickDB({ filePath: 'data.sqlite' });
 		const accounts: any = await db.get(`${command?.user.id}.accounts`);
 
-		console.log(
-			await db.set(`${command?.user.id}`, {
-				accounts: usernames
-					.split(',')
-					.map((username) => {
-						return accounts.filter((account: any) => console.log(account !== username));
-					})
-					.flat(),
-			})
-		);
+		await db.set(`${command?.user.id}`, {
+			accounts: usernames
+				.trim()
+				.replace(/,\s*$/, '')
+				.split(',')
+				.map((username) => {
+					return accounts.filter((account: any) => account !== username);
+				})
+				.flat(),
+		});
 
 		const embed = new EmbedBuilder()
-			.setFooter({ text: `Removed ${usernames.split(',').length} account${usernames.split(',').length === 1 ? '' : 's'}.` })
-			.addFields({ name: 'Accounts successfully removed from profile:', value: usernames.split(',').join(', ') });
+			.setFooter({
+				text: `Removed ${usernames.trim().replace(/,\s*$/, '').split(',').length} account${
+					usernames.trim().replace(/,\s*$/, '').split(',').length === 1 ? '' : 's'
+				}.`,
+			})
+			.addFields({ name: 'Accounts successfully removed from profile:', value: usernames.trim().replace(/,\s*$/, '').split(',').join(', ') });
 
 		await command.reply({ embeds: [embed] });
 	}
