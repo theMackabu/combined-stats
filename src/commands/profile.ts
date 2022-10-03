@@ -21,12 +21,8 @@ export class Profile {
 		let accountList: any = [];
 		try {
 			Promise.all(
-				accounts.map(async (account: any) => {
-					const uuid: any = await got
-						.get(`https://api.mojang.com/users/profiles/minecraft/${account}`)
-						.json()
-						.catch((err) => console.log(err));
-					accountList.push(`\`${account}\` - [${uuid ? uuid.id : '__invalid player__'}](${uuid ? 'https://25karma.xyz/player/' + uuid.id : ''})\n`);
+				Object.keys(accounts).map(async (username: any) => {
+					accountList.push(`\`${username}\` - [${accounts[username]}](https://25karma.xyz/player/${accounts[username]})\n`);
 				})
 			).then(async () => {
 				await command.reply({
@@ -64,18 +60,50 @@ export class Profile {
 		@SlashOption({ description: 'Seperate each account by commas', name: 'accounts' }) usernames: string,
 		command: CommandInteraction
 	): Promise<void> {
+		let uuidList: any = [];
+		let error: string = '';
+
 		const db = new QuickDB({ filePath: 'data.sqlite' });
-		await db.push(`${command?.user.id}.accounts`, usernames.trim().replace(/,\s*$/, '').split(','));
+		const embed = new EmbedBuilder();
+		const userList = usernames.trim().replace(/,\s*$/, '').split(',');
 
-		const embed = new EmbedBuilder()
-			.setFooter({
-				text: `Added ${usernames.trim().replace(/,\s*$/, '').split(',').length} account${
-					usernames.trim().replace(/,\s*$/, '').split(',').length === 1 ? '' : 's'
-				}.`,
+		Promise.all(
+			userList.map(async (username: any) => {
+				await got
+					.get(`https://api.mojang.com/users/profiles/minecraft/${username}`)
+					.json()
+					.catch((err) => console.log(err.message))
+					.then((data: any) => {
+						db.push(`${command?.user.id}.accounts.${username}`, data.id);
+					});
 			})
-			.addFields({ name: 'Accounts successfully added to profile:', value: usernames.trim().replace(/,\s*$/, '').split(',').join(', ') });
+		)
+			.catch(async (err) => {
+				error = err.message;
+				await command.reply({
+					embeds: [
+						{
+							description: `**Failed to add accounts, please try again**\n${err.message}`,
+							footer: { text: 'tip: this account name may not exist' },
+						},
+					],
+				});
+			})
+			.then(async () => {
+				if (error == '') {
+					embed.setFooter({
+						text: `Added ${usernames.trim().replace(/,\s*$/, '').split(',').length} account${
+							usernames.trim().replace(/,\s*$/, '').split(',').length === 1 ? '' : 's'
+						}.`,
+					});
+					embed.addFields({
+						name: 'Accounts successfully added to profile:',
+						value: usernames.trim().replace(/,\s*$/, '').split(',').join(', '),
+					});
 
-		await command.reply({ embeds: [embed] });
+					await command.reply({ embeds: [embed] });
+				}
+			});
 	}
 
 	@Slash({

@@ -24,19 +24,19 @@ export class Profile {
 				.json()
 				.then(async (res: any) => {
 					const combined: any = {
-						coins: [],
-						wins: [],
-						score: [],
-						correctGuesses: [],
-						totalVotes: [],
+						['Coins']: [],
+						['Wins']: [],
+						['Score']: [],
+						['Correct Guesses']: [],
+						['Total Votes']: [],
 					};
 
 					res.map((user: any) => {
-						combined.coins.push(user.data.coins);
-						combined.wins.push(user.data.wins);
-						combined.score.push(user.data.score);
-						combined.correctGuesses.push(user.data.correct_guesses);
-						combined.totalVotes.push(user.data.total_votes);
+						combined['Coins'].push(user.data.coins);
+						combined['Wins'].push(user.data.wins);
+						combined['Score'].push(user.data.score);
+						combined['Correct Guesses'].push(user.data.correct_guesses);
+						combined['Total Votes'].push(user.data.total_votes);
 					});
 
 					const embed = new EmbedBuilder()

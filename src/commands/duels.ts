@@ -24,15 +24,15 @@ export class Profile {
 				.json()
 				.then(async (res: any) => {
 					const combined: any = {
-						coins: [],
-						wins: [],
-						losses: [],
-						kills: [],
-						deaths: [],
-						blocksPlaced: [],
-						damageDealt: [],
-						kdr: [],
-						wlr: [],
+						['Coins']: [],
+						['Wins']: [],
+						['Losses']: [],
+						['Kills']: [],
+						['Deaths']: [],
+						['Blocks Placed']: [],
+						['Damage Dealt']: [],
+						['K/D Ratio']: [],
+						['W/L Ratio']: [],
 					};
 
 					const settings: any = {
@@ -40,18 +40,22 @@ export class Profile {
 					};
 
 					res.map((user: any) => {
-						combined.coins.push(user.data.general.coins);
-						combined.wins.push(user.data.general.wins);
-						combined.losses.push(user.data.general.losses);
-						combined.kills.push(user.data.general.kills);
-						combined.deaths.push(user.data.general.deaths);
-						combined.blocksPlaced.push(user.data.general.blocks_placed);
-						combined.damageDealt.push(user.data.general.damage_dealt);
+						combined['Coins'].push(user.data.general.coins);
+						combined['Wins'].push(user.data.general.wins);
+						combined['Losses'].push(user.data.general.losses);
+						combined['Kills'].push(user.data.general.kills);
+						combined['Deaths'].push(user.data.general.deaths);
+						combined['Blocks Placed'].push(user.data.general.blocks_placed);
+						combined['Damage Dealt'].push(user.data.general.damage_dealt);
 						settings.cosmeticTitle.push(user.data.settings.active_cosmetics.cosmetictitle);
 					});
 
-					combined.kdr.push(combined.kills.reduce((a: number, b: number) => a + b, 0) / combined.deaths.reduce((a: number, b: number) => a + b, 0));
-					combined.wlr.push(combined.wins.reduce((a: number, b: number) => a + b, 0) / combined.losses.reduce((a: number, b: number) => a + b, 0));
+					combined['K/D Ratio'].push(
+						combined['Kills'].reduce((a: number, b: number) => a + b, 0) / combined['Deaths'].reduce((a: number, b: number) => a + b, 0)
+					);
+					combined['W/L Ratio'].push(
+						combined['Wins'].reduce((a: number, b: number) => a + b, 0) / combined['Losses'].reduce((a: number, b: number) => a + b, 0)
+					);
 
 					const embed = new EmbedBuilder()
 						.setDescription(discord_id ? `***${discord_id}'s stats in Duels [overall]***` : `***Your combined stats in Duels [overall]***`)
@@ -69,8 +73,8 @@ export class Profile {
 					});
 
 					embed.addFields({
-						name: 'titles',
-						value: JSON.stringify(settings.cosmeticTitle),
+						name: 'Titles',
+						value: settings.cosmeticTitle.join(', '),
 						inline: true,
 					});
 
