@@ -1,3 +1,8 @@
+// Gamespeed LTD 2022. All Rights Reserved.
+// module: murder.ts
+// This file is licensed under the GPL-3 License.
+// License text available at https://www.gnu.org/licenses/gpl-3.0.en.html
+
 import got from 'got';
 import { QuickDB } from 'quick.db';
 import { EmbedBuilder } from 'discord.js';
@@ -8,7 +13,7 @@ import { Discord, MetadataStorage, Slash, SlashOption } from 'discordx';
 export class Profile {
 	@Slash({
 		description: 'view combined blitz stats',
-		name: 'blitz_combined',
+		name: 'murder_combined',
 	})
 	async combinedStats(
 		@SlashOption({ description: 'Discord tag', name: 'tag', required: false }) discord_id: string,
@@ -27,7 +32,6 @@ export class Profile {
 					const combined: any = {
 						['Coins']: [],
 						['Wins']: [],
-						['Play Time']: [],
 						['Kills']: [],
 						['Deaths']: [],
 						['K/D Ratio']: [],
@@ -36,8 +40,7 @@ export class Profile {
 
 					res.map((user: any) => {
 						combined['Coins'].push(user.data.coins);
-						combined['Wins'].push(user.data.wins + user.data.team_wins);
-						combined['Play Time'].push(user.data.time_played);
+						combined['Wins'].push(user.data.wins);
 						combined['Kills'].push(user.data.kills);
 						combined['Deaths'].push(user.data.deaths);
 					});
@@ -50,7 +53,7 @@ export class Profile {
 					);
 
 					const embed = new EmbedBuilder()
-						.setDescription(discord_id ? `***${discord_id}'s stats in Blitz SG***` : `***Your combined stats in Blitz SG***`)
+						.setDescription(discord_id ? `***${discord_id}'s stats in Murder Mystery***` : `***Your combined stats in Murder Mystery***`)
 						.setFooter({ text: `${uuidList?.length} accounts combined` });
 
 					Object.keys(combined).map((stat: string) => {

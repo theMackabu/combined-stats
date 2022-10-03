@@ -1,3 +1,8 @@
+// Gamespeed LTD 2022. All Rights Reserved.
+// module: profile.ts
+// This file is licensed under the GPL-3 License.
+// License text available at https://www.gnu.org/licenses/gpl-3.0.en.html
+
 import got from 'got';
 import { QuickDB } from 'quick.db';
 import { EmbedBuilder } from 'discord.js';

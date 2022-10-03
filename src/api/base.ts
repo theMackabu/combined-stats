@@ -1,4 +1,8 @@
-import { client } from '../main.js';
+// Gamespeed LTD 2022. All Rights Reserved.
+// module: base.ts
+// This file is licensed under the GPL-3 License.
+// License text available at https://www.gnu.org/licenses/gpl-3.0.en.html
+
 import type { Context } from 'koa';
 import { Get, Router } from '@discordx/koa';
 

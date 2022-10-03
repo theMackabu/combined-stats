@@ -1,3 +1,8 @@
+// Gamespeed LTD 2022. All Rights Reserved.
+// module: help.ts
+// This file is licensed under the GPL-3 License.
+// License text available at https://www.gnu.org/licenses/gpl-3.0.en.html
+
 import { EmbedBuilder } from 'discord.js';
 import { Pagination } from '@discordx/pagination';
 import type { CommandInteraction } from 'discord.js';

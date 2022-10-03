@@ -1,3 +1,8 @@
+// Gamespeed LTD 2022. All Rights Reserved.
+// module: stats.ts
+// This file is licensed under the GPL-3 License.
+// License text available at https://www.gnu.org/licenses/gpl-3.0.en.html
+
 import got from 'got';
 import type { Context } from 'koa';
 import { Get, Post, Router } from '@discordx/koa';

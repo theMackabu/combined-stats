@@ -1,3 +1,8 @@
+// Gamespeed LTD 2022. All Rights Reserved.
+// module: overall.ts
+// This file is licensed under the GPL-3 License.
+// License text available at https://www.gnu.org/licenses/gpl-3.0.en.html
+
 import got from 'got';
 import { QuickDB } from 'quick.db';
 import { EmbedBuilder } from 'discord.js';
@@ -25,17 +30,17 @@ export class Profile {
 				.json()
 				.then(async (res: any) => {
 					const combined: any = {
-						level: [],
-						exp: [],
-						karma: [],
-						achievementPoints: [],
-						questsCompleted: [],
-						totalGamesPlayed: [],
-						totalKills: [],
-						totalWins: [],
-						totalCoins: [],
-						giftsSent: [],
-						giftsReceived: [],
+						['Level']: [],
+						['Experience']: [],
+						['Karma']: [],
+						['Achievement Points']: [],
+						['Quests Completed']: [],
+						['Total Games Played']: [],
+						['Total Kills']: [],
+						['Total Wins']: [],
+						['Total Coins']: [],
+						['Gifts Sent']: [],
+						['Gifts Received']: [],
 					};
 
 					const misc: any = {
@@ -43,17 +48,17 @@ export class Profile {
 					};
 
 					res.map((user: any) => {
-						combined.level.push(user.data.level);
-						combined.exp.push(user.data.exp);
-						combined.karma.push(parseInt(user.data.karma));
-						combined.achievementPoints.push(user.data.achievement_points);
-						combined.questsCompleted.push(user.data.quests_completed);
-						combined.totalGamesPlayed.push(user.data.total_games_played);
-						combined.totalKills.push(user.data.total_kills);
-						combined.totalWins.push(user.data.total_wins);
-						combined.totalCoins.push(parseInt(user.data.total_coins));
-						combined.giftsSent.push(user.data.gifts_sent);
-						combined.giftsReceived.push(user.data.gifts_received);
+						combined['Level'].push(user.data.level);
+						combined['Experience'].push(user.data.exp);
+						combined['Karma'].push(parseInt(user.data.karma));
+						combined['Achievement Points'].push(user.data.achievement_points);
+						combined['Quests Completed'].push(user.data.quests_completed);
+						combined['Total Games Played'].push(user.data.total_games_played);
+						combined['Total Kills'].push(user.data.total_kills);
+						combined['Total Wins'].push(user.data.total_wins);
+						combined['Total Coins'].push(parseInt(user.data.total_coins));
+						combined['Gifts Sent'].push(user.data.gifts_sent);
+						combined['Gifts Received'].push(user.data.gifts_received);
 						misc.ranks.push(user.data.rank);
 					});
 
@@ -70,13 +75,13 @@ export class Profile {
 					});
 
 					embed.addFields({
-						name: 'estimatedCost',
-						value: `$${(combined.level.reduce((a: number, b: number) => a + b, 0).toFixed(2) * 1.58 + misc.ranks.length * 11.3).toFixed(2)}`,
+						name: 'Estimated Cost',
+						value: `$${(combined['Level'].reduce((a: number, b: number) => a + b, 0).toFixed(2) * 1.58 + misc.ranks.length * 11.3).toFixed(2)}`,
 						inline: true,
 					});
 
 					embed.addFields({
-						name: 'ranks',
+						name: 'Ranks',
 						value: misc.ranks.join(', '),
 						inline: true,
 					});
