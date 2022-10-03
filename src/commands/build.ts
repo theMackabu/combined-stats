@@ -20,7 +20,7 @@ export class Profile {
 
 		try {
 			await got
-				.post(`http://155.248.207.29:5000/api/stats/BuildBattle`, { json: { usernames: accounts } })
+				.post(`${process.env.APP_URL}/api/stats/BuildBattle`, { json: { usernames: accounts } })
 				.json()
 				.then(async (res: any) => {
 					const combined: any = {
