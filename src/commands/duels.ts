@@ -16,11 +16,12 @@ export class Profile {
 	): Promise<void> {
 		const db = new QuickDB({ filePath: 'data.sqlite' });
 		const formatted_discord_id = discord_id ? discord_id.slice(2).slice(0, -1) : null;
-		const accounts: Array<string> | null = await db.get(`${formatted_discord_id ? formatted_discord_id : command?.user.id}.accounts`);
+		const accounts: any = await db.get(`${formatted_discord_id ? formatted_discord_id : command?.user.id}.accounts`);
+		const uuidList: Array<string> = Object.values(accounts);
 
 		try {
 			await got
-				.post(`${process.env.APP_URL}/api/stats/Duels`, { json: { usernames: accounts } })
+				.post(`${process.env.APP_URL}/api/stats/Duels`, { json: { uuids: uuidList } })
 				.json()
 				.then(async (res: any) => {
 					const combined: any = {
@@ -59,7 +60,7 @@ export class Profile {
 
 					const embed = new EmbedBuilder()
 						.setDescription(discord_id ? `***${discord_id}'s stats in Duels [overall]***` : `***Your combined stats in Duels [overall]***`)
-						.setFooter({ text: `${accounts?.length} accounts combined` });
+						.setFooter({ text: `${uuidList?.length} accounts combined` });
 
 					Object.keys(combined).map((stat: string) => {
 						embed.addFields({

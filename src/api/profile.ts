@@ -9,11 +9,17 @@ const db = new QuickDB({ filePath: 'data.sqlite' });
 export class Guilds {
 	@Get('/api/profiles')
 	async profiles(ctx: Context): Promise<void> {
-		ctx.body = { profiles: await db.all() };
+		const query = await db.all();
+
+		ctx.body = {
+			profiles: query.map((data) => {
+				return { [data.id]: data.value };
+			}),
+		};
 	}
 
 	@Get('/api/profile/:id')
 	async profile(ctx: Context): Promise<void> {
-		ctx.body = { profile: await db.get(`${ctx.params.id}.accounts`) };
+		ctx.body = { [ctx.params.id]: { accounts: await db.get(`${ctx.params.id}.accounts`) } };
 	}
 }

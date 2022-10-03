@@ -13,8 +13,16 @@ const publicRoutes = [
 		name: 'combined stats',
 		url: '/api/stats',
 		param: 'game',
-		body: '{usernames: Array<string>}',
+		body: '{uuids: Array<string>}',
 		info: 'View combined gamemode stats',
+	},
+	{
+		type: 'POST',
+		name: 'combined stats',
+		url: '/api/overall',
+		param: '',
+		body: '{uuids: Array<string>}',
+		info: 'View overall stats',
 	},
 ];
 
